@@ -2,16 +2,10 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.models.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { upload } from "../middlewares/multer.middlewares.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const registerUser = asyncHandler( async (req,res) => {
     const {username , email , fullName , password} = req.body
-    
-    // validation
-    // if (fullName === "") {
-    //     throw new ApiError(404,"full name is requried")
-    // }
     
     if (
         [fullName, email , username, password].some((field) => field?.trim() === "")
@@ -19,7 +13,7 @@ const registerUser = asyncHandler( async (req,res) => {
         throw new ApiError(400,`all fields are required`)
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{username},{email}]
     })
 
@@ -30,14 +24,17 @@ const registerUser = asyncHandler( async (req,res) => {
     const avatarLocalPath = req.files?.avatar[0]?.path;
     const coverLocalPath = req.files?.coverImage[0]?.path;
 
-    console.log(`the things after logint the avatarLocalPath ${avatarLocalPath} and coverLocalPath ${coverLocalPath}`);
-
+    console.log(`code is only reaching till line 27 ,and in user controller`);
     if (!avatarLocalPath) {
         throw new ApiError(400,"avatar file is required")
         
     }
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     const coverImage = await uploadOnCloudinary(coverLocalPath)
+     
+
+    // code isn't able to reach till here
+
 
     if (!avatar) {
         throw new ApiError(400,"avatar file is required")
