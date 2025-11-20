@@ -17,9 +17,6 @@ connectDB()
     console.error(`got error while coneectiing to mongodb ${err}`)
 })
 
-
-
-
 // another way to connect to mongodb using iife(immediately invoked function exceution) method
 
 // ;( async () => {
